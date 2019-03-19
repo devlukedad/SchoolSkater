@@ -8,6 +8,12 @@
 
 import SpriteKit
 
+struct PhysicsCategory {
+    static let skater:UInt32 = 0x1 << 0
+    static let brick:UInt32 = 0x1 << 1
+    static let gem:UInt32 = 0x1 << 2
+}
+
 class GameScene: SKScene {
     
     let skater = Skater(imageNamed: "skater")
