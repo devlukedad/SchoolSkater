@@ -142,6 +142,9 @@ class GameScene: SKScene {
         brick.physicsBody = SKPhysicsBody(rectangleOf: brick.size, center: center)
         brick.physicsBody?.affectedByGravity = false
         
+        brick.physicsBody?.categoryBitMask = PhysicsCategory.brick
+        brick.physicsBody?.collisionBitMask = 0
+        
         return brick
     }
     
