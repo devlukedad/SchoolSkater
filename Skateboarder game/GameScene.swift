@@ -14,7 +14,7 @@ struct PhysicsCategory {
     static let gem:UInt32 = 0x1 << 2
 }
 
-class GameScene: SKScene {
+class GameScene: SKScene, SKPhysicsContactDelegate {
     
     let skater = Skater(imageNamed: "skater")
     
@@ -91,6 +91,7 @@ class GameScene: SKScene {
     
     override func didMove(to view: SKView) {
        physicsWorld.gravity = CGVector(dx: 0.0, dy: -6.0)
+        physicsWorld.contactDelegate = self
         
         anchorPoint = CGPoint.zero
         
@@ -110,6 +111,16 @@ class GameScene: SKScene {
         view.addGestureRecognizer(tapGesture)
         
     }
+    
+    func didBegin(_ contact: SKPhysicsContact) {
+        
+        if contact.bodyA.categoryBitMask == PhysicsCategory.skater && contact.bodyB.categoryBitMask == PhysicsCategory.brick {
+            skater.isOnGround =  true
+        }
+    }
+    
+    
+    
     
     @objc func handleTap(tapGesture: UITapGestureRecognizer) {
         if skater.isOnGround {
