@@ -23,23 +23,29 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var scrollSpeed: CGFloat = 5.0
     
+    let startingScrollSpeed: CGFloat = 5.0
+    
+    
     let gravitySpeed: CGFloat = 1.5
     var lastUpdateTime: TimeInterval?
     
     func updateSkater() {
-        if !skater.isOnGround {
-            let velocityY = skater.velocity.y - gravitySpeed
-            skater.velocity = CGPoint(x: skater.velocity.x, y: velocityY)
-            
-            let newSkaterY: CGFloat = skater.position.y + skater.velocity.y
-            skater.position = CGPoint(x: skater.position.x, y: newSkaterY)
-            
-            if skater.position.y < skater.minimumY {
-                skater.position.y = skater.minimumY
-                skater.velocity = CGPoint.zero
-                skater.isOnGround = true
+        if let velocityY = skater.physicsBody?.velocity.dy {
+            if velocityY < -100.0 || velocityY > 100.0 {
+                skater.isOnGround = false
             }
         }
+        
+        let isOffScreen = skater.position.y < 0.0 || skater.position.x < 0.0
+        
+        let maxRotation = CGFloat(GLKMathDegreesToRadians(85.0))
+        
+        let isTippedOver = skater.zRotation > maxRotation || skater.zRotation < -maxRotation
+        
+        if isOffScreen || isTippedOver {
+            gameOver()
+        }
+        
     }
     
     func updateBricks(withScrollAmount currentScrollAmount: CGFloat) {
@@ -103,19 +109,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         addChild(background)
         skater.setupPhysicsBody()
-        resetSkater()
         addChild(skater)
         
         let tapMethod = #selector(GameScene.handleTap(tapGesture:))
         let tapGesture = UITapGestureRecognizer(target: self, action: tapMethod)
         view.addGestureRecognizer(tapGesture)
         
+        startGame()
+        
     }
     
     func didBegin(_ contact: SKPhysicsContact) {
         
         if contact.bodyA.categoryBitMask == PhysicsCategory.skater && contact.bodyB.categoryBitMask == PhysicsCategory.brick {
-            skater.isOnGround =  true        
+            skater.isOnGround =  true
         }
     }
     
@@ -127,6 +134,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             skater.velocity = CGPoint(x: 0.0, y: skater.jumpSpeed)
             
             skater.isOnGround = false
+            
+            skater.physicsBody?.applyImpulse(CGVector(dx: 0.0, dy: 260.0))
         }
     }
     
@@ -137,6 +146,28 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         skater.zPosition = 10
         skater.minimumY = skaterY
         
+        skater.zRotation = 0.0
+        skater.physicsBody?.velocity = CGVector(dx: 0.0, dy: 0.0)
+        
+        skater.physicsBody?.angularVelocity = 0.0
+        
+    }
+    
+    func startGame() {
+        
+        resetSkater()
+        scrollSpeed = startingScrollSpeed
+        lastUpdateTime = nil
+        
+        for brick in bricks {
+            brick.removeFromParent()
+        }
+        bricks.removeAll(keepingCapacity: true)
+        
+    }
+    
+    func gameOver() {
+        startGame()
     }
     
     func spawnBrick(atPosition position: CGPoint) -> SKSpriteNode {
