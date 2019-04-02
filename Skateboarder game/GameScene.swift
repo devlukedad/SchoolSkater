@@ -35,7 +35,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 skater.isOnGround = false
             }
         }
-        
+          
         let isOffScreen = skater.position.y < 0.0 || skater.position.x < 0.0
         
         let maxRotation = CGFloat(GLKMathDegreesToRadians(85.0))
