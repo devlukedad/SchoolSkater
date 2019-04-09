@@ -238,7 +238,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         gem.physicsBody = SKPhysicsBody(rectangleOf: gem.size, center: gem.centerRect.origin)
         gem.physicsBody?.categoryBitMask = PhysicsCategory.gem
-        gem.physicsBody?.affectedByGravity = false
+        gem.physicsBody?.affectedByGravity = false      // ddkdkddkdkdkdkdkdkkdkdkdkdkdkdkdkdkdkdd
         
         gems.append(gem)
         
