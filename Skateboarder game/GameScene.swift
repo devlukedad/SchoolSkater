@@ -141,6 +141,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         background.position = CGPoint(x: xMid, y: yMid)
         
         addChild(background)
+        setupLabels()
         skater.setupPhysicsBody()
         addChild(skater)
         
@@ -242,6 +243,40 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         gems.append(gem)
         
+    }
+    
+    func setupLabels() {
+        let scoreTextLabel: SKLabelNode = SKLabelNode(text: "Score")
+        scoreTextLabel.position = CGPoint(x: 14.0, y: frame.size.height - 20.0)
+        scoreTextLabel.horizontalAlignmentMode = .left
+        scoreTextLabel.fontName = "Courier-Bold"
+        scoreTextLabel.fontSize = 14.0
+        scoreTextLabel.zPosition = 20
+        addChild(scoreTextLabel)
+        
+        let highScoreTextLabel: SKLabelNode = SKLabelNode(text: "High Score")
+        highScoreTextLabel.position = CGPoint(x: frame.size.width - 14.0, y: frame.size.height - 20.0)
+        highScoreTextLabel.horizontalAlignmentMode = .right
+        highScoreTextLabel.fontName = "Courier-Bold"
+        highScoreTextLabel.fontSize = 14.0
+        highScoreTextLabel.zPosition = 20
+        addChild(highScoreTextLabel)
+        
+        let scoreLabel: SKLabelNode = SKLabelNode(text: "0")
+        scoreLabel.position = CGPoint(x: 14.0, y: frame.size.height - 40.0)
+        scoreLabel.horizontalAlignmentMode = .left
+        scoreLabel.fontName = "Courier-Bold"
+        scoreLabel.fontSize = 14.0
+        scoreLabel.zPosition = 20
+        addChild(scoreLabel)
+        
+        let highScoreLabel: SKLabelNode = SKLabelNode(text: "0")
+        highScoreLabel.position = CGPoint(x: frame.size.width - 14.0, y: frame.size.height - 40.0)
+        highScoreLabel.horizontalAlignmentMode = .right
+        highScoreLabel.fontName = "Courier-Bold"
+        highScoreLabel.fontSize = 14.0
+        highScoreLabel.zPosition = 20
+        addChild(highScoreLabel)
     }
     
     func removeGem(_ gem: SKSpriteNode){
